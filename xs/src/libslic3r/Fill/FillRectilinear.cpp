@@ -537,4 +537,22 @@ void FillCubic::_fill_surface_single(
     fill2._fill_single_direction(expolygon, direction2, -x_shift, out);
 }
 
+void FillHorizontalCross::_fill_surface_single(
+    unsigned int                    thickness_layers,
+    const direction_t               &direction,
+    ExPolygon                       &expolygon,
+    Polylines*                      out)
+{
+    FillHorizontalCross fill2 = *this;
+    fill2.density /= 2.;
+    direction_t direction2 = direction;
+    direction2.first += PI/4; // rotate by 45deg so it is not in the direction of default top/bottom infill
+
+    const coord_t range = scale_(this->min_spacing / this->density);
+    const coord_t x_shift = (coord_t)(scale_(this->z) + range) % (coord_t)(range*2);
+    fill2.dont_connect = true;
+    fill2._fill_single_direction(expolygon, direction2, -x_shift, out);
+    fill2._fill_single_direction(expolygon, direction2, +x_shift, out);
+}
+
 } // namespace Slic3r

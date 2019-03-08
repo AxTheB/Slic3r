@@ -109,6 +109,24 @@ protected:
 	    Polylines*                      polylines_out);
 };
 
+class FillHorizontalCross : public FillRectilinear
+{
+public:
+    virtual Fill* clone() const { return new FillHorizontalCross(*this); };
+    virtual ~FillHorizontalCross() {}
+    virtual bool can_solid() const { return false; };
+
+protected:
+	// The grid fill will keep the angle constant between the layers,; see the implementation of Slic3r::Fill.
+    virtual float _layer_angle(size_t idx) const { return 0.f; }
+
+	virtual void _fill_surface_single(
+	    unsigned int                     thickness_layers,
+	    const std::pair<float, Point>   &direction,
+	    ExPolygon                       &expolygon,
+	    Polylines*                      polylines_out);
+};
+
 }; // namespace Slic3r
 
 #endif // slic3r_FillRectilinear_hpp_
